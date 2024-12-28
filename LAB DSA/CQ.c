@@ -1,71 +1,66 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define Max 3 
 
-void insert(char q[], int *r, int *cnt) { 
-    char ele; 
-    if (*cnt == Max) 
-    { 
-        printf("C Queue overflow\n"); 
-        return; 
-    } 
+#define MAX_SIZE 3
 
-    *r = (*r + 1) % Max; 
-    printf("Enter the element: "); 
-    scanf(" %c", &ele); 
-    q[*r] = ele; 
-    (*cnt)++; 
-} 
+char queue[MAX_SIZE];
+int rear = -1, front = 0, count = 0;
 
-void del(char q[], int *f, int *cnt) 
+void insert() 
 { 
-    if (*cnt == 0) 
-    { 
-        printf("C Queue is empty\n"); 
-        return; 
-    } 
+    char element;
+    if (count == MAX_SIZE) {
+        printf("Circular Queue Overflow\n");
+        return;
+    }
 
-    printf("Element deleted from circular queue is %c\n", q[*f]); 
-    *f = (*f + 1) % Max; 
-    (*cnt)--; 
-} 
-
-void display(char q[], int f, int cnt) 
-{ 
-    int i, j; 
-    if (cnt == 0) 
-    { 
-        printf("Circular Queue is empty\n"); 
-        return; 
-    } 
-    printf("Circular Queue contents are:\n"); 
-
-    for (i = f, j = 0; j < cnt; j++) 
-    { 
-        printf("%d : %c\n", i, q[i]); 
-        i = (i + 1) % Max; 
-    } 
+    rear = (rear + 1) % MAX_SIZE;
+    printf("Enter the element: ");
+    scanf(" %c", &element);
+    queue[rear] = element;
+    count++;
 }
 
-int main() 
+void delete() 
 { 
-    char q[Max]; 
-    int r = -1, f = 0, cnt = 0; 
-    int ch; 
+    if (count == 0) {
+        printf("Circular Queue is empty\n");
+        return;
+    }
 
-    while(1) 
-    { 
-        printf("1: Insert\n2: Delete\n3: Display\n4: Exit\n"); 
-        printf("Enter choice\n"); 
-        scanf("%d", &ch); 
-        switch(ch) 
-        { 
-            case 1: insert(q, &r, &cnt); break; 
-            case 2: del(q, &f, &cnt); break; 
-            case 3: display(q, f, cnt); break; 
-            default: exit(0); 
+    printf("Element deleted from circular queue: %c\n", queue[front]);
+    front = (front + 1) % MAX_SIZE;
+    count--;
+}
+
+void display()
+{ 
+    if (count == 0) {
+        printf("Circular Queue is empty\n");
+        return;
+    }
+
+    printf("Circular Queue contents:\n");
+    for (int i = front, j = 0; j < count; j++) {
+        printf("%d : %c\n", i, queue[i]);
+        i = (i + 1) % MAX_SIZE;
+    }
+}
+
+int main()
+{ 
+    int choice;
+
+    while (1) { 
+        printf("1: Insert\n2: Delete\n3: Display\n4: Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: insert(); break;
+            case 2: delete(); break;
+            case 3: display(); break;
+            default: exit(0);
         } 
     } 
-} 
-
-
+}

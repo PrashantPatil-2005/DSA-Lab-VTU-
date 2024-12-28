@@ -4,83 +4,81 @@
 
 #define MAX_ELE 4
 
-void status(int *s, int top) { 
-    int used; 
-    if (top == -1) 
-        used = 0; 
-    else 
-        used = top + 1; 
+int stack[MAX_ELE];
+int top = -1;
 
-    printf("%d locations of the stack are used up\n", used); 
-    printf("%d locations of the stack are free\n", MAX_ELE - used); 
+void push() {
+    if (top == MAX_ELE - 1) {
+        printf("Stack overflow\n");
+        return;
+    }
+    int ele;
+    printf("Enter the element: ");
+    scanf("%d", &ele);
+    stack[++top] = ele;
+    printf("Element pushed: %d\n", ele);
 }
 
-void display(int s[], int *top) { 
-    int i; 
-    if ((*top) == -1) 
-        printf("stack empty\n"); 
-    else { 
-        printf("stack elements are\n"); 
-        printf("TOS is: "); 
-        for(i = (*top); i >= 0; i--) 
-            printf("%d\n", s[i]); 
-    } 
+void pop() {
+    if (top == -1) {
+        printf("Stack underflow\n");
+        return;
+    }
+    printf("Element popped: %d\n", stack[top--]);
 }
 
-void push(int *s, int *top, int ele) { 
-    if ((*top) == MAX_ELE - 1) { 
-        printf("stack overflow\n"); 
-        return; 
-    } 
-    (*top)++; 
-    printf("enter the element: "); 
-    scanf("%d", &ele); 
-    s[*top] = ele; 
+void display() {
+    if (top == -1) {
+        printf("Stack is empty\n");
+        return;
+    }
+    printf("Stack elements (from top):\n");
+    for (int i = top; i >= 0; i--)
+        printf("%d\n", stack[i]);
 }
 
-void pop(int s[], int *top) { 
-    if ((*top) == -1) 
-        printf("stack underflow\n"); 
-    else { 
-        printf("element popped is: %d\n", s[*top]); 
-        (*top)--; 
-    } 
+void status() {
+    printf("Used: %d\n", top + 1);
+    printf("Free: %d\n", MAX_ELE - (top + 1));
 }
 
-void palindrome(char *s) { 
-    int length = strlen(s); 
-    int stack[MAX_ELE]; 
-    int top = -1;
-    
-    // Push characters into the stack
-    for (int i = 0; i < length; i++) 
-        push(stack, &top, s[i]);
+void checkPalindrome(char *str) {
+    int len = strlen(str), tempTop = -1;
+    char tempStack[MAX_ELE];
 
-    // Check if the string is a palindrome
-    for (int i = 0; i < length; i++) { 
-        if (stack[top--] != s[i]) { 
-            printf("String is not a palindrome\n"); 
-            exit(0); 
-        } 
-    } 
-    printf("String is a palindrome\n"); 
+    if (len > MAX_ELE) {
+        printf("String too long for the stack\n");
+        return;
+    }
+
+    for (int i = 0; i < len; i++) 
+        tempStack[++tempTop] = str[i];
+    for (int i = 0; i < len; i++) {
+        if (tempStack[tempTop--] != str[i]) {
+            printf("Not a palindrome\n");
+            return;
+        }
+    }
+    printf("It's a palindrome\n");
 }
 
-int main() { 
-    int ch, top = -1; 
-    int s[MAX_ELE]; 
-    char str[10] = "mom"; 
-    for (;;) { 
-        printf("1: push\n2: pop\n3: palindrome\n4: display\n5: Status\n6: Exit\n"); 
-        printf("Enter choice: "); 
-        scanf("%d", &ch); 
-        switch(ch) { 
-            case 1: push(s, &top, 0); break;  // '0' will just act as a placeholder for now
-            case 2: pop(s, &top); break; 
-            case 3: palindrome(str); break; 
-            case 4: display(s, &top); break; 
-            case 5: status(s, top); break; 
-            default: exit(0); 
-        } 
-    } 
+int main() {
+    int choice;
+    char str[MAX_ELE + 1] = "ada";
+
+    while (1) {
+        printf("\n1: Push\n2: Pop\n3: Check Palindrome\n4: Display\n5: Status\n6: Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: push(); break;
+            case 2: pop(); break;
+            case 3: checkPalindrome(str); break;
+            case 4: display(); break;
+            case 5: status(); break;
+            case 6: exit(0);
+            default: printf("Invalid choice\n");
+        }
+    }
 }
